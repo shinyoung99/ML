@@ -1,0 +1,129 @@
+# 기계학습 6주차 정리노트
+
+201703205 김현준 202184032 안신영
+
+<질문>
+
+하이퍼파라미터 조절만 하는 것이 과연 합리적인가? 
+
+→ 하이퍼파라미터 조절은 머신 러닝 모델을 튜닝하고 최적화하는 과정에서 중요한 부분입니다. 그러나 하이퍼파라미터 조절만으로는 모든 문제를 해결할 수 없으며, 합리적인 모델 향상을 위해서는 다음과 같은 다른 요소들도 고려해야 합니다:
+
+1. 데이터 준비 및 전처리: 모델의 성능은 입력 데이터의 품질과 양에 많은 영향을 받습니다. 따라서 데이터를 정제하고 적절하게 전처리하여 모델에 적합한 형태로 제공하는 것이 중요합니다.
+2. 모델 아키텍처 선택: 모델의 종류와 아키텍처는 문제의 복잡성과 특성에 따라 결정되어야 합니다. 하이퍼파라미터 튜닝 이전에 적절한 모델을 선택하는 것이 중요합니다.
+3. 특성 엔지니어링: 데이터의 특성을 모델에 적절하게 제공하는 것은 모델의 성능을 향상시키는 데 중요합니다. 도메인 지식을 활용하여 특성을 만들거나 변형하는 것이 필요할 수 있습니다.
+4. 교차 검증: 모델의 일반화 성능을 정확하게 평가하기 위해 교차 검증을 수행해야 합니다. 이를 통해 하이퍼파라미터 조절 결과를 믿을 수 있게 됩니다.
+5. 모델 해석과 디버깅: 모델이 어떻게 예측을 수행하는지 이해하고, 잘못된 예측을 디버깅하는 것이 중요합니다. 모델의 해석 가능성을 높이는 방법을 고려할 수 있습니다.
+6. 계산 리소스 고려: 하이퍼파라미터 튜닝은 계산 비용이 많이 들 수 있으므로 가능한 리소스를 효율적으로 활용해야 합니다.
+
+요약하면, 하이퍼파라미터 조절은 머신 러닝 모델을 최적화하는 중요한 단계 중 하나이지만, 다른 모든 요소와 함께 고려해야 합니다. 최상의 결과를 얻으려면 데이터, 모델 선택, 특성 엔지니어링 및 모델 해석과 같은 다른 요소들과 조화롭게 작업해야 합니다.
+
+함께 고려해야하는 상황들이 많은 것 같다. 
+
+<실습>
+
+```python
+import numpy as np
+from sklearn import datasets
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import LinearSVC
+ 
+
+iris=datasets.load_iris()
+X=iris["data"][:, (2,3)]
+y=(iris["target"]==2).astype(np.float64)
+svm_clf=Pipeline([
+    ("scaler", StandardScaler()), ("linear_svc", LinearSVC(C=1, loss="hinge", random_state=42)),
+                  ])
+svm_clf.fit(X,y)
+svm_clf.predict([[5.5, 1.7]])
+
+```
+
+<실습2>
+
+```python
+from sklearn.datasets import make_moons
+X, y=make_moons(n_samples=100)
+```
+
+<실습3>
+
+```python
+from sklearn.svm import SVC
+from sklearn.datasets import make_moons
+X, y=make_moons(n_samples=100)
+poly_kernel_svm_clf=Pipeline([("scaler", StandardScaler()), ("svm_clf", SVC(kernel="poly", degree=10, coef0=1, C=5))])
+poly_kernel_svm_clf.fit(X, y)
+poly_kernel_svm_clf.predict([[10, 1]])
+```
+
+<실습4>
+
+```python
+from sklearn.svm import LinearSVR
+svm_reg1 = LinearSVR(epsilon=1.5, random_state=42)
+svm_reg2 = LinearSVR(epsilon=0.5, random_state=42)
+svm_reg1.fit(X, y)
+svm_reg2.fit(X, y)
+```
+
+<실습5>
+
+```python
+from sklearn.svm import SVR
+svm_poly_reg1=SVR(kernel="poly", degree=2, C=100, epsilon=0.1, gamma="scale")
+svm_poly_reg2=SVR(kernel="poly", degree=2, C=0.01, epsilon=0.1, gamma="scale")
+svm_poly_reg1.fit(X,y)
+svm_poly_reg2.fit(X,y)
+```
+
+<정리>
+
+svm은 두 클래스로부터 가장 멀리 떨어진 결정 경계를 이용한 분류기로
+
+두 클래스를 나누는 “라지 마진”을 나타내는 벡터를 최대화 한다. 데이터를 동일한 기준으로 통일하는 “스케일링” 과정을 거치면 정밀도가 높아진다.
+
+*하드 마진
+
+- 소프트 마진
+
+소프트 마진은 모든 훈련 샘플이 도로 바깥쪽에 올바르게 분류되도록 하는 마진 분류입니다.
+
+*소프트 마진
+
+svm에는 벡터를 가능한 최대화하고 마진 오류 사이의 적절한 균형을 추구하기 위해 c 값을 조정하는 기능이 있습니다.
+
+svm의 데이터 처리 흐름은 다음과 같다
+
+스케일링→ linearSVC(Hinge 함수)→ 기타 데이터 파이프 라인
+
+비선형 svm 분류
+
+*선형 svm에 특성 추가
+
+-다항 특성 추가
+
+-유사도 특성 활용(가우시안 방사 기저 함수): 랜드마크 선택후 모든 샘플을 그 랜드마크에 대해 유사도를 계산하고 랜드마크를 바꾸기를 반복
+
+- svm+ 커널 트릭
+
+-가우시안 RBF
+
+— gamma 증가시키면 종 모양 그래프가 좁아져 결정 경계가 샘플에 따라 휘어짐
+
+결정 함구와 예측
+
+h(x)=(W^T)X+b +…..
+
+결정 함수의 기울기가 작아질 수록 마진 폭이 커짐. ||W||에 비례
+
+목적 함수
+
+1/2(W^T)W
+
+하드 마진 t(i)(W^T+b)≥ 1를 최소화 시키는 w와 b를 구해야 한다.
+
+소프트 마진 1/2(W^T)W+C ((m-1)sigma(i=0))gita(i)
+
+t(i)(W^T X(i) [b) ≥ 1-gita](https://www.notion.so/b-1-gita-d9f65da65ebf433f97dc4af389c70724?pvs=21)(i)
