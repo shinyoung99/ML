@@ -1,0 +1,282 @@
+<정리>
+
+인공 신경망(Artificial Neural Network)이란 뇌에 있는 생물학적 뉴런의 네트워크에서 영감을 받은 머신러닝 모델으로 딥러닝의 핵심이다. 
+
+  1943년 명제논리를 사용해 동물 뇌의 생물학적 뉴런의 간단한 계산 모델을 제시하는 것으로 시작되었으며, 1957년 프랭크 로센블래트에 의해 퍼셉트론이 탄생 한것을 계기로 부흥기를 맞이 했으나, 1969년 마빈 민스키가 퍼셉트론은 XOR문제에는 적용할 수 없다는 것을 수학적으로 증명하는것을 계기로 침체기를 맞이 하였다.
+(다층 퍼셉트론으로 xor문제를 해결할 수는 있지만, 지구상의 그 누구도 다층 퍼셉트론을 학습시킬 방법을 찾아낸 바가 없었다). 1974년 폴 웨어보스가 오류 역전파 알고리즘으로 다층 퍼셉트론을 학습시키는 방법을 박사 학위 논문으로 발표->
+1986년 제프리 힌튼 오류 역전파 알고리즘으로 다층 퍼셉트론을 학습시키는데 성공-> 1998년 얀 르쿤 CNN(Convolutional Neural Network) 발표하며 새로 부흥함.
+
+ 인공 뉴런
+ 생물학적 뉴런에 착안해 하나 이상의 이진(on/off) 입력과 이진 출력 하나를 가지는 매우 단순한 신경망 모델로 입력이 일정 개수만큼 활성화되었을 때 출력을 내보낸다.
+
+ 퍼셉트론
+▪ 가장 간단한 인공 신경망 구조로 1957년 프랑크 로젠블라트가 제안
+▪ TLU 또는 LTU(linear threshold unit) 라 불리는 인공 뉴런 활용
+▪ 모든 입력은 가중치와 연결됨.
+▪ 퍼셉트론에서 가장 널리 사용되는 계단 함수는 헤비사이드 계단 함수
+
+  Wij(next step) = Wij(previous step) + n(yj - y^j) Xi 
+
+다층 퍼셉트론(multilayer perceptron, MLP)
+▪ 퍼셉트론을 여러 개 쌓아  린 인공신경망으로 입력층 하나와 은닉층이라 불리는 하나 이상의 TLU층과 출력층으로 구성. 모든 층은 편향을 포함하며, 다음 층과 완전히 연결되어 있음
+
+완전연결 층이란 각 층에 속한 각각의 뉴런이 이전 층의 모든 뉴런과 연결되어 있을 때를 가리키고 출력 계산은 여러 개의 완전연렬 층으로 구성된 다층 퍼셉트론 모델 계산
+
+hw,b (X) = pie(XW + b)
+
+
+역전파 훈련 알고리즘
+
+순전파 ->역전파
+
+순전파란, z=wx1+wx2 로 그전 입력값들에 가중치를 곱한 후 더하여 결정
+sigmoid(z), 활성화 함수(여러 종류가 있다.)
+
+****오차의 개념
+MSE
+Eout=1/2(output1-output2)^2
+Etarger=1/2(target1-target2)^2
+
+Eadd=Eout+Etarget
+
+****오차가 나온 후 그에 따른  역전파************
+
+
+그후 미분의 연쇄법칙인 체인률 적용!!
+
+
+강의 참고 문서 링크: https://wikidocs.net/37406
+
+활성화 함수
+
+MLP 특징
+▪ 랜덤하게 설정함. 그렇지 않으면 층의 모든 뉴런이 동일하게 움직임
+▪ 활성화 함수: 보통 계단함수 대신에 다른 함수 사용.
+• 로지스틱(시그모이드)
+• 하이퍼볼릭 탄젠트 함수(쌍곡 탄젠트 함수)
+• ReLU 함수
+▪ 활성화 함수 대체 필요성
+▪ 선형성을 벗어나기 위해
+• 선형 변환을 여러 개 연결 해도 선형 변환에 머무름.
+• 복잡한 문제 해결 불가능
+▪ 비선형 활성화 함수를 충분히 많은 층에서 사용하면 매우 강력한 모델 학습 가능
+
+출력 뉴런 수
+▪ 예측해야 하는 값의 수에 따라 출력 뉴런 설정(카테고리)(붗꽃 문제 참조)
+▪ 예제 1: 주택 가격 예측 (출력 뉴런 1개)(price만 다르다)(결과값!)
+▪ 예제 2: 다변량 회귀(동시에 여러값 예측하기)( 여러가지 결과값 지역, 가격 방 개수 등등)
+
+▪ 활성화 함수 지정
+▪ 출력값에 특별한 제한이 없다면 활성화 함수 사용하지 않음.
+▪ 출력이 양수인 경우
+• ReLU 또는 softplus 사용 가능
+▪ 손실함수
+▪ 일반적으로 평균제곱오차(MSE) 활용
+▪ 이상치가 많을 경우: 평균절댓값오차(MAE) 사용 가능
+▪ 후버(Huber) 손실 사용 가능
+
+*********이진분류*********************
+▪ 하나의 출력 뉴런 사용
+▪ 활성화 함수: 로지스틱 함수
+
+다중레이블 이진분류(추가 조사)
+▪ 다층 퍼셉트론 활용
+▪ 예제 1: 이메일의 스팸 여부와 함께 긴급메일 여부 확인 가능
+▪ 예제 2: 다중 클래스 분류
+->MNIST 숫자 이미지. 0부터 9까지(분류 문제)(MULTI CATEGORY)
+
+•출력층 활성화 함수: 소프트맥스 함수
+▪ 손실함수
+▪ 크로스 엔트로피
+▪ 분류 MLP의 전형적인 구조
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+케라스
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+OS->middle->application 단이라는 측면에서 보면 application layer에 해당한다.
+API제공 (spring같은 framework인가? 추가 조사)
+
+ppt 발췌
+
+케라스란, 모든 종류의 신경망을 손쉽게 만들어 주는 최상위 딥러닝 API 제공
+▪ 2015년 3월에 오픈 소스로 공개
+▪ 멀티 백엔드 케라스
+▪ 구글의 텐서플로(Tensorflow), MS의 CNTK, Theano, 아파치 MXNet, 애플 Core ML
+▪ 자바스크립트, 타입스크립트: 웹브라우저에서 케라스 실행 가능
+▪ PlaidML: 모든 종류의 GPU에서 실행 가능
+▪ tensorflow.keras
+▪ 텐서플로만 지원하는 keras 백엔드
+###############################
+케라스 시퀀셜 API 활용 : 회귀
+###############################
+Sequential 클래스를 이용한 회귀용 MLP 구축은 분류용과 기본적으로 동일.
+#손실함수: 평균제곱오차(MSE)
+# 출력층에 활성화함수 사용하지 않는 하나의 뉴런만 사용
+사용되는 데이터셋은 캘리포니아 데이터셋으로 잡음이 많아 과대적합을 줄이기 위해 뉴런 수가 적은 하나의 은닉층만 사용해야 한다.(은닉층과 뉴런이 많이 사용될 수록 가중치 파라미터의 수가 증가하여 과대적합 위험 상승)
+
+케라스 Sequential 클래스 활용의 장단점
+▪ 사용하기 매우 쉬우며 성능 우수함.
+▪ 입출력이 여러 개이거나 더 복잡한 네트워크를 구성하기 어려움.
+▪ Sequential 클래스 대신에 함수형 API, 하위클래스(subclassing) API 등을 사용하여 보다 복잡하며, 보다 강력한 딥러닝 모델 구축 가능
+
+와이드&딥 신경망의 활용 방법3
+▪ 다중 출력이 필요한 경우
+• 여러 출력이 필요한 작업
+- 그림에 있는 주요 물체 분류와 위치 알아냄.
+• 동일한 데이터에서 독립적인 여러 작업 수행
+- 한 출력은 사람의 얼굴 표정 분류, 다른 출력은 안경 썼는지 분류
+
+
+############################
+서브클래싱 API로 동적 모델 만들기
+###############################
+동적 모델 생성
+▪ Sequential 클래스와 함수형 API 는 모두 선언적 방식으로 정적임
+• 한 번 선언되면 변경할 수 없는 모델 생성
+• 모델 저장, 복사, 공유 용이
+• 모델 구조 출력 및 모델 분석 용이
+▪ 반복문, 조건문 등을 활용하여 동적 모델을 생성하고자 할 경우 명령형 프로그래밍 방식 요구됨
+▪ 서브클래스 API을 활용하여 동적 모델 생성 가능
+
+#########################################
+
+체크포인트(checkpoint)?   (콜백함수의 개념)(대용량 데이처 처리시 안전 조치)
+훈련의 시작/끝/중간에 호출할 객체를 콜백함수를 이용하여 지정 가능(최적값 예측을 찾기 위한 경우도 사용)조기 종료 구현
+
+▪ 사용자정의 콜백함수
+▪ keras.callbacks.Callback 클래스 상속
+▪ 상속 과정에서 이미 선언된 콜백함수 메서드 중에서 필요한 메서드를 재정의 하면 됨.
+▪ 예제: 아래 클래스는 에포크가 끝날 때마다 검증손실과 훈련손실의 비율을 계산하고자 할 경우에
+필요한 콜백함수 지정
+
+<의문점>                                                                                        
+
+처음 심층신경망이 발견되었을때 처리 능력이 너무 과도하여 힘들것이라고 생각했다는데 현대 컴퓨팅 파워가 강력해서 그런건지 아니면 연산 방식이 효율적으로 개선된것인지 궁금하다.           
+
+역전파 알고리즘을 배울때 각 층마다 체인률을 적용하여 역으로 계산하는 방식 모다 효율적인 방식이 있는지, 혹은 현업에서 쓰이는 알고리즘은 이것에 기반하여 매트릭스로 계산하는것인지 아니면 아예 다른 방식인지 궁금                                                                                                    
+RELU가 왜 많이 사용되는지와 각 활성화 함수의 장단점을 알고 싶다.
+
+케라스 파트가 잘 이해되지 않는다. 집에 가서 찾아볼것 
+
+Sequential 클래스 대신에 함수형 API, 하위클래스(subclassing) API 등을 사용하여 보다 복잡하며, 보다 강력한 딥러닝 모델 구축 가능(이해가 안된다.) 찾아보니 자유도를 높히는것 같다. 고정되지 않은 모델을 구축할 방법 지원 @가장 효율적인 신경망 구조를 얻기 위해***         
+
+와이드&딥 추가 조사  
+
+케라스 동적 모델 추가 조사(케라스는 기본적으로 정적이기에 그것을 우회하느법)                
+모델 저장과 복원 파트 이해가 가지 않는다.  (전처리와 데이터 예측 분리)     
+
+
+
+<실습>
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.linear_model import Perceptron
+
+iris = load_iris(as_frame=True)
+X = iris.data[["petal length (cm)", "petal width (cm)"]].values
+y = (iris.target == 0)  # Iris setosa
+
+per_clf = Perceptron(random_state=42)
+per_clf.fit(X, y)
+
+X_new = [[2, 0.5], [3, 1]]
+y_pred = per_clf.predict(X_new)
+
+y_pred
+리턴값: y_pred
+
+
+from sklearn.linear_model import SGDClassifier
+
+sgd_clf = SGDClassifier(loss="perceptron", penalty=None,
+                        learning_rate="constant", eta0=1, random_state=42)
+sgd_clf.fit(X, y)
+assert (sgd_clf.coef_ == per_clf.coef_).all()
+assert (sgd_clf.intercept_ == per_clf.intercept_).all()
+
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+
+a = -per_clf.coef_[0, 0] / per_clf.coef_[0, 1]
+b = -per_clf.intercept_ / per_clf.coef_[0, 1]
+axes = [0, 5, 0, 2]
+x0, x1 = np.meshgrid(
+    np.linspace(axes[0], axes[1], 500).reshape(-1, 1),
+    np.linspace(axes[2], axes[3], 200).reshape(-1, 1),
+)
+X_new = np.c_[x0.ravel(), x1.ravel()]
+y_predict = per_clf.predict(X_new)
+zz = y_predict.reshape(x0.shape)
+custom_cmap = ListedColormap(['#9898ff', '#fafab0'])
+
+plt.figure(figsize=(7, 3))
+plt.plot(X[y == 0, 0], X[y == 0, 1], "bs", label="Iris setosa 아님")
+plt.plot(X[y == 1, 0], X[y == 1, 1], "yo", label="Iris setosa")
+plt.plot([axes[0], axes[1]], [a * axes[0] + b, a * axes[1] + b], "k-",
+         linewidth=3)
+plt.contourf(x0, x1, zz, cmap=custom_cmap)
+plt.xlabel("꽃잎 길이")
+plt.ylabel("꽃잎 너비")
+plt.legend(loc="lower right")
+plt.axis(axes)
+plt.show()
+
+<실습2>
+# 추가 코드 - 이 셀은 그림 10-8을 생성하고 저장합니다.
+
+from scipy.special import expit as sigmoid
+
+def relu(z):
+    return np.maximum(0, z)
+
+def derivative(f, z, eps=0.000001):
+    return (f(z + eps) - f(z - eps))/(2 * eps)
+
+max_z = 4.5
+z = np.linspace(-max_z, max_z, 200)
+
+plt.figure(figsize=(11, 3.1))
+
+plt.subplot(121)
+plt.plot([-max_z, 0], [0, 0], "r-", linewidth=2, label="Heaviside")
+plt.plot(z, relu(z), "m-.", linewidth=2, label="ReLU")
+plt.plot([0, 0], [0, 1], "r-", linewidth=0.5)
+plt.plot([0, max_z], [1, 1], "r-", linewidth=2)
+plt.plot(z, sigmoid(z), "g--", linewidth=2, label="Sigmoid")
+plt.plot(z, np.tanh(z), "b-", linewidth=1, label="Tanh")
+plt.grid(True)
+plt.title("활성화 함수")
+plt.axis([-max_z, max_z, -1.65, 2.4])
+plt.gca().set_yticks([-1, 0, 1, 2])
+plt.legend(loc="lower right", fontsize=13)
+
+plt.subplot(122)
+plt.plot(z, derivative(np.sign, z), "r-", linewidth=2, label="Heaviside")
+plt.plot(0, 0, "ro", markersize=5)
+plt.plot(0, 0, "rx", markersize=10)
+plt.plot(z, derivative(sigmoid, z), "g--", linewidth=2, label="Sigmoid")
+plt.plot(z, derivative(np.tanh, z), "b-", linewidth=1, label="Tanh")
+plt.plot([-max_z, 0], [0, 0], "m-.", linewidth=2)
+plt.plot([0, max_z], [1, 1], "m-.", linewidth=2)
+plt.plot([0, 0], [0, 1], "m-.", linewidth=1.2)
+plt.plot(0, 1, "mo", markersize=5)
+plt.plot(0, 1, "mx", markersize=10)
+plt.grid(True)
+plt.title("도함수")
+plt.axis([-max_z, max_z, -0.2, 1.2])
+
+save_fig("activation_functions_plot")
+plt.show()
+
+<실습3>
+링크: https://colab.research.google.com/github/rickiepark/handson-ml3/blob/main/10_neural_nets_with_keras.ipynb#scrollTo=5sVIWw5wa6Es&uniqifier=1
+
+<실습4>
+model keras.models. Sequential([ keras, layers. Dense (30, activation="relu", input shape=X_train.shape[1:]), keras, layers. Dense (1)) #dense는 층
+model.compile(loss="mean_squared_error", optimizer-keras.optimizers.SGD(learning_rate=1e-3))
+history=model.fit(X_train, y_train, epochs=20, validation_data=(X_valid, y_valid))
+mse_test= model.evaluate(X_test, y_test)
+X_new = X_test[:3]
+y_pred=model.predict(X_new)
