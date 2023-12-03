@@ -1,0 +1,68 @@
+import matplotlib.pyplot as plt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, BatchNormalization
+from tensorflow.keras.datasets import cifar10
+from tensorflow.keras.utils import to_categorical
+
+# Load and preprocess the dataset (Modify this part according to your dataset)
+(x_train, y_train), (x_test, y_test) = cifar10.load_data()
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
+
+# Model definition
+model = Sequential()
+model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
+model.add(BatchNormalization())
+model.add(MaxPooling2D((2, 2)))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(BatchNormalization())
+model.add(MaxPooling2D((2, 2)))
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(BatchNormalization())
+model.add(MaxPooling2D((2, 2)))
+model.add(Flatten())
+model.add(Dense(256, activation='relu'))
+model.add(BatchNormalization())
+model.add(Dense(128, activation='relu'))
+model.add(BatchNormalization())
+model.add(Dense(10, activation='softmax'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Model summary
+model.summary()
+
+# Train the model for 10 epochs
+history = model.fit(x_train, y_train, epochs=10, validation_split=0.2)
+
+# Display the last 10 epochs logs
+print(history.history)
+
+# Plot the training graph
+plt.figure(figsize=(12, 4))
+
+# Training and validation loss graph
+plt.subplot(1, 2, 1)
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.title('Training and Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+
+# Training and validation accuracy graph
+plt.subplot(1, 2, 2)
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.title('Training and Validation Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+
+plt.tight_layout()
+plt.show()
+
+# Evaluate the model on test data
+test_loss, test_accuracy = model.evaluate(x_test, y_test)
+print(f'Test Loss: {test_loss}, Test Accuracy: {test_accuracy}')
